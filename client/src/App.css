@@ -1,0 +1,143 @@
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: center;
+ }
+
+ body {
+  background-size: 400% 400%;
+  animation: gradient 9s ease infinite;
+  height: 100vh;
+}
+
+
+
+ul { margin: 0; padding: 0;}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  min-height: 800px;
+  border: 1px solid lightgrey;
+  padding: 20px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  background-color: rgb(241, 241, 241);
+  border-radius: 4px;
+}
+
+.header {
+  text-align: center;
+  font-size: 20px;
+  color: rgb(94, 189, 94);
+  margin-bottom: 40px;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 10px 0;
+}
+
+.form .input {
+  width: 80%;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgb(94, 189, 94);;
+  margin-left: 10px;
+  color: rgb(94, 189, 94);;
+  font-weight: bold;
+  outline: none;
+  font-size: 20px;
+  margin-bottom: 30px;
+  border-radius: 4px;
+}
+
+.form .input::placeholder {
+  color: rgb(94, 189, 94);;
+}
+
+.form .btn {
+  width: 15%;
+}
+
+.btn {
+  width: 80px;
+  height: 45px;
+  padding: 0 10px;
+  font-weight: bold;
+  border: none;
+  background-color: rgb(94, 189, 94);
+  color: white;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background-color: rgb(49, 185, 49);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.btn-footer {
+  width: auto;
+}
+
+.todoList {
+  height: 500px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+}
+
+.todoItem {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin: 10px 10px 10px 0;
+  border: 2px solid green;
+  color: green;
+  background-color: #fff;
+  font-size: 18px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0 10px 0;
+}
+
+.todoItem input {
+  display: none;
+}
+
+.todoItem label {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border: 3px solid darkgreen;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.todoItem input:checked ~ label {
+  border: 3px solid darkgreen;
+  background-color: green;
+}
+
+.todoItem .item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsh.server.mapper.TodoMapper">
+
+    <select id="list" resultType="Todo">
+        SELECT *
+        FROM todo
+        order by status 
+             ,no desc
+    </select>
+
+    <select id="select" resultType="Todo">
+        SELECT *
+        FROM todo
+        WHERE no = #{no}
+    </select>
+
+    <insert id="insert">
+        <selectKey keyProperty="no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID() FROM dual
+        </selectKey>
+        INSERT INTO todo( name, status )
+        VALUES ( #{name}, #{status} )
+    </insert>
+
+    <update id="update">
+        UPDATE todo
+           SET name = #{name},
+               status = #{status}
+        WHERE no = #{no}
+    </update>
+
+    <update id="updateAll">
+        UPDATE todo
+           SET status = 1
+    </update>
+
+    <delete id="delete">
+        DELETE FROM todo
+        WHERE no = #{no}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE FROM todo
+    </delete>
+
+
+</mapper>
