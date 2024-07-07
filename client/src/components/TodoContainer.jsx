@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import TodoHeader from './TodoHeader'
 import TodoInput from './TodoInput'
 import TodoList from './TodoList'
 import TodoFooter from './TodoFooter'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import axios from 'axios';
 
 const TodoContainer = () => {
   const [todoList, setTodoList] = useState([])
@@ -16,11 +15,13 @@ const TodoContainer = () => {
   }, [])
 
   // 목록 [GET]
-  const getList = () => {
-    fetch('http://127.0.0.1:8080/todos')
-      .then((response) => response.json())
-      .then((data) => setTodoList(data))
-      .catch((error) => console.error())
+  const getList = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8080/todos')
+      setTodoList(response.data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   // 체크 박스 토글
@@ -33,30 +34,19 @@ const TodoContainer = () => {
       updDate: todo.updDate
     }
 
-    const init = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }
-
-    const url = 'http://localhost:8080/todos'
-
     try {
-      const response = await fetch(url, init)
-      console.log(response);
+      const response = await axios.put('http://localhost:8080/todos', data)
     } catch (error) {
       console.log(error)
     }
 
     const updateTodoList = todoList.map((item) => {
-      return item.no == todo.no ? data : item
+      return item.no === todo.no ? data : item
     })
 
     //정렬
     updateTodoList.sort((a, b) => {
-      return a.status - b.status == 0 ? b.no - a.no : a.status - b.status
+      return a.status - b.status === 0 ? b.no - a.no : a.status - b.status
     })
 
     getList()
@@ -64,31 +54,19 @@ const TodoContainer = () => {
 
   // 전체 완료
   const onUpateAll = async () => {
-    const init = {
-      method: 'PUT',
-    };
-    const url = 'http://localhost:8080/todos/all'
-
     try {
-      const response = await fetch(url, init)
-      console.log(response);
-      if (response.ok) {
-        console.log("전체 업데이트 성공");
-
-      } else {
-        throw new Error("Failed to update all todos");
-      }
+      const response = await axios.put('http://localhost:8080/todos/all')
     } catch (error) {
       console.log(error)
     }
 
     const updatedTodoList = todoList.map(todo => {
       return { ...todo, status: 1 }
-    });
+    })
 
     // 정렬
     updatedTodoList.sort((a, b) => {
-      return a.status - b.status == 0 ? b.no - a.no : a.status - b.status
+      return a.status - b.status === 0 ? b.no - a.no : a.status - b.status
     })
 
     setTodoList(updatedTodoList)
@@ -96,13 +74,9 @@ const TodoContainer = () => {
 
   // 삭제
   const onRemove = async (no) => {
-    const init = {
-      method: 'DELETE'
-    }
-    const url = `http://localhost:8080/todos/${no}`;
     try {
-      const response = await fetch(url, init)
-      console.log(response);
+      const response = await axios.delete(`http://localhost:8080/todos/${no}`)
+      console.log(response)
     } catch (error) {
       console.log(error)
     }
@@ -113,23 +87,20 @@ const TodoContainer = () => {
 
   // 등록
   const onSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+
+    if (input.trim() === '') {
+      alert('todo를 입력하세요')
+      return
+    }
+
     const data = {
       name: input
     }
 
-    const init = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }
-
-    const url = 'http://localhost:8080/todos'
     try {
-      const response = await fetch(url, init)
-      const newTodo = await response.json()
+      const response = await axios.post('http://localhost:8080/todos', data)
+      const newTodo = response.data
       getList()
     } catch (error) {
       console.log(error)
@@ -139,18 +110,14 @@ const TodoContainer = () => {
 
   // input state 에 저장
   const onChange = (e) => {
-    const changedInput = e.target.value;
-    setInput(changedInput);
+    const changedInput = e.target.value
+    setInput(changedInput)
   }
 
   // 전체 삭제
   const onRemoveAll = async () => {
-    const init = {
-      method: 'DELETE'
-    }
-    const url = 'http://localhost:8080/todos/all'
     try {
-      const response = await fetch(url, init)
+      const response = await axios.delete('http://localhost:8080/todos/all')
       setTodoList([])
     } catch (error) {
       console.log(error)
@@ -162,7 +129,7 @@ const TodoContainer = () => {
       <TodoHeader />
       <TodoInput onSubmit={onSubmit} input={input} onChange={onChange} />
       <TodoList todoList={todoList} onToggle={onToggle} onRemove={onRemove} />
-      <TodoFooter onRemoveAll={onRemoveAll} onUpateAll={onUpateAll} />
+      <TodoFooter onRemoveAll={onRemoveAll} onUpateAll={onUpateAll} todoList={todoList} />
     </div>
   )
 }
